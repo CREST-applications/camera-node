@@ -7,7 +7,7 @@ def main():
     config = Config(
         fps=30,
         device=-1,
-        scale=1.0,
+        scale=0.1,
     )
 
     rclpy.init()
