@@ -6,7 +6,6 @@ import cv2
 
 
 class Config(BaseModel):
-    camera_topic: str
     fps: int
     device: int
     scale: float
@@ -18,7 +17,7 @@ class Camera(Node):
 
         self.__config = config
 
-        self.__pub = self.create_publisher(Image, self.__config.camera_topic, 10)
+        self.__pub = self.create_publisher(Image, "/camera", 10)
         self.create_timer(1 / config.fps, self.__callback)
 
         self.__capture = cv2.VideoCapture(self.__config.device)
