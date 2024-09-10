@@ -6,10 +6,10 @@ import cv2
 
 
 class Config(BaseModel):
-    camera_topic: str = "/camera"
-    fps: int = 30
-    device: int = 0
-    scale: float = 1.0
+    camera_topic: str
+    fps: int
+    device: int
+    scale: float
 
 
 class Camera(Node):
