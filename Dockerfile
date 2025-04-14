@@ -1,8 +1,10 @@
-FROM ros:humble-ros-core
+ARG ROS_DISTRO=humble
+
+FROM ros:${ROS_DISTRO}-ros-core
 
 RUN apt-get update && apt-get install -y \
-    ros-humble-v4l2-camera \
-    ros-humble-image-transport-plugins
+    ros-${ROS_DISTRO}-v4l2-camera \
+    ros-${ROS_DISTRO}-image-transport-plugins
 
 ARG UID
 ARG GID
@@ -12,7 +14,7 @@ RUN groupadd -g ${GID} user && \
 
 RUN usermod -a -G video user
 
-RUN echo "source /opt/ros/humble/setup.bash" >> /home/user/.bashrc
+RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> /home/user/.bashrc
 
 USER user
 RUN mkdir -p /home/user/ros2_ws/src
