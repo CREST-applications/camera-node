@@ -1,5 +1,5 @@
 services:
-  dev:
+  prod:
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -8,9 +8,33 @@ services:
         - GID=${GID}
     network_mode: host
     volumes:
-      - .:/user/ros2_ws
+      - .:/home/user/ros2_ws
     devices:
       - /dev/video0:/dev/video0
     environment:
       - ROS_DOMAIN_ID=33
     command: ros2 run v4l2_camera v4l2_camera_node
+
+  mock:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.dev
+      args:
+        - UID=${UID}
+        - GID=${GID}
+    network_mode: host
+    volumes:
+      - .:/home/user/ros2_ws/src
+    # devices:
+    #   - /dev/video0:/dev/video0
+    environment:
+      - ROS_DOMAIN_ID=33
+    working_dir: /home/user/ros2_ws/
+    tty: true
+    command:
+    - bash
+    - -c
+    - |
+      colcon build --symlink-install
+      source ./install/setup.bash
+      ros2 run camera mock

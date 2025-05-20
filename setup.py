@@ -29,6 +29,7 @@ setup(
     entry_points={
         "console_scripts": [
             "main = camera.main:main",
+            "mock = camera.mock:main"
         ],
     },
 )
