@@ -1,7 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from rclpy import qos
-from sensor_msgs.msg import Image
+from sensor_msgs.msg import CompressedImage
 from cv_bridge import CvBridge
 import cv2
 
@@ -16,16 +16,16 @@ class MockCamera(Node):
         super().__init__("mock_camera")
 
         self.__pub = self.create_publisher(
-            Image,
+            CompressedImage,
             "/camera",
-            qos.qos_profile_sensor_data,
+            1,
         )
         self.create_timer(0.5, self.__callback)
 
         self.__image_list = self.__open_images()
         self.__image_index = 0
 
-    def __open_images(self) -> list[Image]:
+    def __open_images(self) -> list[CompressedImage]:
         cv_bridge = CvBridge()
         image_list = []
 
@@ -34,13 +34,14 @@ class MockCamera(Node):
             if image is None:
                 raise FileNotFoundError(f"Image not found: {image_path}")
 
-            image = cv_bridge.cv2_to_imgmsg(image)
+            image = cv_bridge.cv2_to_compressed_imgmsg(image)
             image_list.append(image)
 
         return image_list
 
     def __callback(self):
         image = self.__image_list[self.__image_index]
+
         self.__pub.publish(image)
         self.get_logger().info(
             f"Publishing image {self.__image_index + 1}/{len(self.__image_list)}"
